@@ -1,0 +1,1 @@
+Read the BIN file. The program right now outputs the bin file contents. 
