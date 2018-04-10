@@ -36,6 +36,11 @@ void updateTLB(int page, int frame, int index, vector<int> pageTLB, vector<int> 
 
 }
 
+void print(int virtAddress, int frame, signed val){
+    int physAddress; //initialize it
+    cout << "Virtual address: "<<virtAddress << " Physical address: " << physAddress << " Value: "<< val <<endl;
+}
+
 int main() {
     FILE * backingStore;
     char * buffer;
@@ -51,8 +56,8 @@ int main() {
     int pageTable [256];   //page table size 256 of value -1
     fill_n(pageTable, 256, -1);
 
-	int bin[256][256];
-
+    int bin[256][256];
+    int physAddress;
     int pageNum = 0;
     int offsett = 0;
     int frame = 0;
@@ -101,13 +106,13 @@ int main() {
                 ///store frame number into frame
                 //frame =
                 /////page table tlb update
+                //change index to real page number
                 //pageTable[index] =
-
-                updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
-				nextFreeFrame++;
+                
+                print(addressEntries[i],)///////
+                nextFreeFrame++;
             } else {   //page found in Page Table
-
-                frame = pageTable[index];
+                frame = pageTable[pageNum];
                 value = bin[frame][offsett];
                 updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 
