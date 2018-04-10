@@ -104,7 +104,7 @@ int main() {
 					bin[nextFreeFrame][j] = (int)buffer[pageNum * 256 + j];
 				}   
 				frame = nextFreeFrame;
-				updateTLB(pageNum, frame, 16, pagesTLB, framesTLB);
+				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 				pageTable[pageNum] = frame;
 				
 				print(addressEntries[i], frame,bin[frame][offsett],offsett);
@@ -113,7 +113,7 @@ int main() {
             } else {   //page found in Page Table
                 frame = pageTable[pageNum];
                 value = bin[frame][offsett];
-                updateTLB(pageNum, frame, 16, pagesTLB, framesTLB);
+                updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 				print(addressEntries[i], frame, bin[frame][offsett], offsett);
 
             }
