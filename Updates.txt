@@ -1,1 +1,6 @@
 Read the BIN file. The program right now outputs the bin file contents. 
+
+Reading from file done.
+The bin file items are stored in buffer.
+The addresses are stored in entriez.
+If you wish to change the names of the variables go ahead.
