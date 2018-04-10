@@ -7,18 +7,32 @@ using namespace std;
 
 int pageNumber(int address){
     int pageNmb = address;
-    pageNmb = pageNmb & 65535; //mask
+    pageNmb = pageNmb & 65535; //mask for page number and offset
     pageNmb >> 15;
     return pageNmb;
 }
 
-int searchTLB(int page, vector<int> pageTLB, vector<int> frameTLB){
-    for(int i = 0; i < frameTLB.size(); i++){
+int offset(int address){
+    int offset = address;
+    offset = offset & 255; //mask for offset
+    return offset;
+}
+
+int searchTLB(int page, vector<int> pageTLB){
+    for(int i = 0; i < pageTLB.size(); i++){
         if(pageTLB[i]== page){
-            return frameTLB[i];
+            return i; //return index
         }
         else return -1; //TLB-miss
     }
+}
+
+void updateTLB(int page, int frame, int index, vector<int> pageTLB, vector<int> frameTLB){ //LRU
+    pageTLB.insert(pageTLB.begin(),page); //insert page at beginning
+    frameTLB.insert(pageTLB.begin(),frame); //insert frame at beginning
+    pageTLB.erase(pageTLB.begin()+index);   //delete specified index
+    frameTLB.erase(pageTLB.begin()+index);
+
 }
 
 int main() {
