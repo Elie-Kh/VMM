@@ -46,7 +46,7 @@ int main() {
 	vector<int> addressEntries;
 	int tempo = 0;
 	backingStore = fopen("BACKING_STORE.bin", "rb");
-	
+	int bin[256][256];
 	if (backingStore == NULL) {
 		fputs("File error", stderr); exit(1);
 	}
@@ -59,9 +59,6 @@ int main() {
 		getline(addresses, readz,'\n');
 		addressEntries.push_back(stoi(readz, nullptr, entries));
 		
-		
-		
-		tempo++;
 	}
 	
 	buffer = (char*)malloc(sizeof(char)*fileSize);
@@ -70,7 +67,21 @@ int main() {
 	if (result != fileSize) {
 		fputs("Reading error", stderr); exit(3);
 	}
-	
+	tempo = 0;
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			bin[i][j] = (int)buffer[tempo++];
+			
+		}
+		
+		
+	}
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			cout << bin[i][j] << " ";
+		}
+		cout << "\n";
+	}
 	system("pause");
 	return 0;
 }
