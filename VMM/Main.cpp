@@ -5,6 +5,22 @@
 #include<fstream>
 using namespace std;
 
+int pageNumber(int address){
+    int pageNmb = address;
+    pageNmb = pageNmb & 65535; //mask
+    pageNmb >> 15;
+    return pageNmb;
+}
+
+int searchTLB(int page, vector<int> pageTLB, vector<int> frameTLB){
+    for(int i = 0; i < frameTLB.size(); i++){
+        if(pageTLB[i]== page){
+            return frameTLB[i];
+        }
+        else return -1; //TLB-miss
+    }
+}
+
 int main() {
 	FILE * backingStore;
 	char * buffer;
