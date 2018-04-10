@@ -48,8 +48,9 @@ int main() {
     vector<int> addressEntries;
     vector<int> pagesTLB (16, -1);   //TLB size 16 of value -1
     vector<int> framesTLB (16, -1);  //TLB size 16
-    int pageTable [256];   //page table size 256 of value -1//////////////////////////////////
-    //vector<int> framesPTable (256, -1);   //page table size 256
+    int pageTable [256];   //page table size 256 of value -1
+    fill_n(pageTable, 256, -1);
+
     int pageNum = 0;
     int offsett = 0;
     int frame = 0;
