@@ -9,7 +9,7 @@ using namespace std;
 int pageNumber(int address){
     int pageNmb = address;
     pageNmb = pageNmb & 65535; //mask for page number and offset
-    pageNmb >> 15;
+    pageNmb = pageNmb >> 8;
     return pageNmb;
 }
 
@@ -20,24 +20,25 @@ int offset(int address){
 }
 
 int searchTLB(int page, vector<int> pageTLB){
-    for(int i = 0; i < pageTLB.size(); i++){
-        if(pageTLB[i]== page){
-            return i; //return index
+    for(int j = 0; j < pageTLB.size(); j++){
+        if(pageTLB[j]== page){
+            return j; //return index
         }
-        else return -1; //TLB-miss
+        
     }
+	return -1; //TLB-miss
 }
 
-void updateTLB(int page, int frame, int index, vector<int> pageTLB, vector<int> frameTLB){ //LRU
-    pageTLB.insert(pageTLB.begin(),page); //insert page at beginning
-    frameTLB.insert(pageTLB.begin(),frame); //insert frame at beginning
-    pageTLB.erase(pageTLB.begin()+index);   //delete specified index
-    frameTLB.erase(pageTLB.begin()+index);
+void updateTLB(int page, int frame, int indexx, vector<int>& pageTLB, vector<int>& frameTLB){ //LRU
+    pageTLB.insert(pageTLB.begin()+0,page); //insert page at beginning
+    frameTLB.insert(frameTLB.begin()+0,frame); //insert frame at beginning
+    pageTLB.erase(pageTLB.begin()+indexx);   //delete specified index
+    frameTLB.erase(frameTLB.begin()+indexx);
 
 }
 
-void print(int virtAddress, int frame, signed val){
-    int physAddress; //initialize it
+void print(int virtAddress, int frame, signed val, int offset){
+    int physAddress = frame*256 + offset; 
     cout << "Virtual address: "<<virtAddress << " Physical address: " << physAddress << " Value: "<< val <<endl;
 }
 
@@ -87,34 +88,33 @@ int main() {
         fputs("Reading error", stderr); exit(3);
     }
 
-    int i;
+    int i = 0;
 	int nextFreeFrame = 0;
     int index;
-    while(i < addressEntries.size() ){
+	double pageFault = 0;
+	double tlbHit = 0;
+    while(i < 1000 ){
         pageNum = pageNumber(addressEntries[i]);
         offsett = offset(addressEntries[i]);
         index = searchTLB(pageNum,pagesTLB);
         if(index == -1) {    //TLB-miss
             if (pageTable[pageNum] == -1) { //page Fault
-                /////////////////////////////////////////////
-                /////read backing_store.bin
+				pageFault++;
+				for (int j = 0; j < 256; j++) {
+					bin[nextFreeFrame][j] = (int)buffer[pageNum * 256 + j];
+				}   
+				frame = nextFreeFrame;
+				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
+				pageTable[pageNum] = frame;
 				
-                /////store in available page frame in main memory
-				for (int i = 0; i < 256; i++) {
-					bin[nextFreeFrame][i] = (int)buffer[pageNum * 256 + i];
-				}
-                ///store frame number into frame
-                //frame =
-                /////page table tlb update
-                //change index to real page number
-                //pageTable[index] =
-                
-                print(addressEntries[i],)///////
+				print(addressEntries[i], frame,bin[frame][offsett],offsett);
                 nextFreeFrame++;
+				
             } else {   //page found in Page Table
                 frame = pageTable[pageNum];
                 value = bin[frame][offsett];
                 updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
+				print(addressEntries[i], frame, bin[frame][offsett], offsett);
 
             }
         }
@@ -122,15 +122,19 @@ int main() {
             frame = framesTLB[index];
             value = bin[frame][offsett];
             updateTLB(pageNum, frame,index,pagesTLB,framesTLB);
-
+			tlbHit++;
+			print(addressEntries[i], frame, bin[frame][offsett], offsett);
         }
 
 
         i++;
     }
 
-
+	cout << "Page fault rate: " << pageFault / 1000 * 100 << "%\n";
+	cout << "TLB hit: " << tlbHit << "\n";
+	cout << "TLB Hit-rate: " << tlbHit / 1000 * 100 << "%\n";
 
     system("pause");
     return 0;
+	//output in file
 }
