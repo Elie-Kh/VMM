@@ -4,3 +4,5 @@ Reading from file done.
 The bin file items are stored in buffer.
 The addresses are stored in entriez.
 If you wish to change the names of the variables go ahead.
+
+Change (line 72) while loop to read addresses to read file instead (so we can get rid of the vector addressEntries)
