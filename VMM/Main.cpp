@@ -83,7 +83,7 @@ int main() {
     }
 
     int i;
-	int positionInMatrix = 0;
+	int nextFreeFrame = 0;
     int index;
     while(i < addressEntries.size() ){
         pageNum = pageNumber(addressEntries[i]);
@@ -96,7 +96,7 @@ int main() {
 				
                 /////store in available page frame in main memory
 				for (int i = 0; i < 256; i++) {
-					bin[positionInMatrix][i] = (int)buffer[pageNum * 255 + i];
+					bin[nextFreeFrame][i] = (int)buffer[pageNum * 256 + i];
 				}
                 ///store frame number into frame
                 //frame =
@@ -104,12 +104,13 @@ int main() {
                 //pageTable[index] =
 
                 updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
-				positionInMatrix++;
+				nextFreeFrame++;
             } else {   //page found in Page Table
 
                 frame = pageTable[index];
                 value = bin[frame][offsett];
                 updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
+
             }
         }
         else{   //page found in TLB
