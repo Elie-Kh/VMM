@@ -50,7 +50,8 @@ int main() {
     vector<int> framesTLB (16, -1);  //TLB size 16
     int pageTable [256];   //page table size 256 of value -1
     fill_n(pageTable, 256, -1);
-    int bin[256][256];
+
+	int bin[256][256];
 
     int pageNum = 0;
     int offsett = 0;
@@ -82,6 +83,7 @@ int main() {
     }
 
     int i;
+	int nextFreeFrame = 0;
     int index;
     while(i < addressEntries.size() ){
         pageNum = pageNumber(addressEntries[i]);
@@ -91,17 +93,24 @@ int main() {
             if (pageTable[pageNum] == -1) { //page Fault
                 /////////////////////////////////////////////
                 /////read backing_store.bin
+				
                 /////store in available page frame in main memory
+				for (int i = 0; i < 256; i++) {
+					bin[nextFreeFrame][i] = (int)buffer[pageNum * 256 + i];
+				}
                 ///store frame number into frame
                 //frame =
                 /////page table tlb update
                 //pageTable[index] =
-                updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 
+                updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
+				nextFreeFrame++;
             } else {   //page found in Page Table
+
                 frame = pageTable[index];
                 value = bin[frame][offsett];
                 updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
+
             }
         }
         else{   //page found in TLB
