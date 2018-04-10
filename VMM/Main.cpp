@@ -50,11 +50,11 @@ int main() {
     vector<int> framesTLB (16, -1);  //TLB size 16
     int pageTable [256];   //page table size 256 of value -1
     fill_n(pageTable, 256, -1);
+    int bin[256][256];
 
     int pageNum = 0;
     int offsett = 0;
     int frame = 0;
-    int pointerTLB = 0;
 
     int tempo = 0;
     backingStore = fopen("BACKING_STORE.bin", "rb");
@@ -87,8 +87,8 @@ int main() {
         pageNum = pageNumber(addressEntries[i]);
         offsett = offset(addressEntries[i]);
         index = searchTLB(pageNum,pagesTLB);
-        if(index == -1){    //TLB-miss
-            if(pageTable[pageNum] == -1){ //page Fault
+        if(index == -1) {    //TLB-miss
+            if (pageTable[pageNum] == -1) { //page Fault
                 /////////////////////////////////////////////
                 /////read backing_store.bin
                 /////store in available page frame in main memory
@@ -96,24 +96,20 @@ int main() {
                 //frame =
                 /////page table tlb update
                 //pageTable[index] =
-                updateTLB(pageNum,frame,16,pagesTLB, framesTLB);
+                updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 
-            }
-            else{
+            } else {   //page found in Page Table
                 frame = pageTable[index];
-                value = bin [frame][offsett];
+                value = bin[frame][offsett];
+                updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
             }
-
-            else {  //page found into Page Table
-                frame = frameTable[index];
-                updateTLB(pageNum,frame,index,pagesPTable,framesPTable);    //update Page Table
-                updateTLB(pageNum,frame,16,pagesTLB, framesTLB);    //update TLB
-
-                ////////////////////////////////frame, offset, need to fetch from physical memory
-            }
+        }
+        else{   //page found in TLB
+            frame = framesTLB[index];
+            value = bin[frame][offsett];
+            updateTLB(pageNum, frame,index,pagesTLB,framesTLB);
 
         }
-
 
 
         i++;
