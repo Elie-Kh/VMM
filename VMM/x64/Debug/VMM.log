@@ -1,4 +1,12 @@
 ﻿  Main.cpp
-c:\users\elie\source\repos\vmm\vmm\main.cpp(11): warning C4552: '>>': operator has no effect; expected operator with side-effect
-c:\users\elie\source\repos\vmm\vmm\main.cpp(28): warning C4715: 'searchTLB': not all control paths return a value
-  VMM.vcxproj -> C:\Users\Elie\source\repos\VMM\x64\Debug\VMM.exe
+c:\users\elie\source\repos\vmm\vmm\main.cpp(12): warning C4552: '>>': operator has no effect; expected operator with side-effect
+c:\users\elie\source\repos\vmm\vmm\main.cpp(40): error C2059: syntax error: '<<'
+c:\users\elie\source\repos\vmm\vmm\main.cpp(59): error C2065: 'backingStore': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(61): error C2065: 'backingStore': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(65): error C2065: 'backingStore': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(66): error C2065: 'backingStore': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(67): error C2065: 'backingStore': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(77): error C2065: 'backingStore': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(122): error C2065: 'frameTable': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(123): error C2065: 'pagesPTable': undeclared identifier
+c:\users\elie\source\repos\vmm\vmm\main.cpp(123): error C2065: 'framesPTable': undeclared identifier
