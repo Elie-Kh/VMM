@@ -43,6 +43,11 @@ void print(int virtAddress, int frame, signed val, int offset) {
 	cout << "Virtual address: " << virtAddress << " Physical address: " << physAddress << " Value: " << val << endl;
 }
 
+void populateBin(int (&okay)[256], char* buf, int pageNum) {
+	for (int i = 0; i < 256; i++) {
+		okay[i] = (int)buf[pageNum * 256 + i];
+	}
+}
 int main() {
 	FILE * backingStore;
 	char * buffer;
@@ -102,9 +107,10 @@ int main() {
 		if (index == -1) {    //TLB-miss
 			if (pageTable[pageNum] == -1) { //page Fault
 				pageFault++;
-				for (int j = 0; j < 256; j++) {
-					bin[j] = (int)buffer[pageNum * 256 + j];
-				}
+				populateBin(bin, buffer, pageNum);
+				//for (int j = 0; j < 256; j++) {
+				//	bin[j] = (int)buffer[pageNum * 256 + j];
+				//}
 
 				bins.push_back(bin);
 				frame = nextFreeFrame;
@@ -123,7 +129,7 @@ int main() {
 				value = ptrToVector[offsett];
 				
 				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
-				print(addressEntries[i], frame, ptrToVector[offsett], offsett);
+				print(addressEntries[i], frame, value, offsett);
 
 			}
 		}
@@ -134,7 +140,7 @@ int main() {
 			value = ptrToVector[offsett];
 			updateTLB(pageNum, frame, index, pagesTLB, framesTLB);
 			tlbHit++;
-			print(addressEntries[i], frame, ptrToVector[offsett], offsett);
+			print(addressEntries[i], frame, value, offsett);
 		}
 
 
