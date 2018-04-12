@@ -65,6 +65,7 @@ int main() {
 
 	int bin[256];
 	vector<int*>bins;
+	bins.reserve(70000);
 	int physAddress;
 	int pageNum = 0;
 	int offsett = 0;
@@ -100,6 +101,7 @@ int main() {
 	int index;
 	double pageFault = 0;
 	double tlbHit = 0;
+
 	while (i < 1000) {
 		pageNum = pageNumber(addressEntries[i]);
 		offsett = offset(addressEntries[i]);
@@ -108,11 +110,13 @@ int main() {
 			if (pageTable[pageNum] == -1) { //page Fault
 				pageFault++;
 				populateBin(bin, buffer, pageNum);
-				//for (int j = 0; j < 256; j++) {
-				//	bin[j] = (int)buffer[pageNum * 256 + j];
-				//}
+				
+				bins.push_back(new int [256]);
+				ptrToVector = bins[nextFreeFrame];
+				for (int i = 0; i < 256; i++) {
+					ptrToVector[i] = bin[i];
 
-				bins.push_back(bin);
+				}
 				frame = nextFreeFrame;
 				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 				pageTable[pageNum] = frame;
