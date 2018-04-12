@@ -65,7 +65,7 @@ int main() {
 
 	int bin[256];
 	vector<int*>bins;
-	bins.reserve(70000);
+	bins.reserve(256);
 	int physAddress;
 	int pageNum = 0;
 	int offsett = 0;
