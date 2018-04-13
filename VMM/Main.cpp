@@ -39,7 +39,7 @@ void updateTLB(int page, int frame, int indexx, vector<int>& pageTLB, vector<int
 }
 
 void print(int virtAddress, int frame, signed val, int offset, ofstream &output) {
-	int physAddress = frame * 128 + offset;
+	int physAddress = frame * 256 + offset;
 	cout << "Virtual address: " << virtAddress << " Physical address: " << physAddress << " Value: " << val << endl;
 	output << "Virtual address: " << virtAddress << " Physical address: " << physAddress << " Value: " << val << endl;
 }
@@ -70,7 +70,7 @@ int main() {
 
 	int bin[256];
 	vector<int*>physicalMemory;
-	physicalMemory.reserve(128);
+	physicalMemory.reserve(256);
 	int physAddress;
 	int pageNum = 0;
 	int offsett = 0;
@@ -142,13 +142,13 @@ int main() {
 				ptrToArrayInVector = physicalMemory[frame];
 				print(addressEntries[i], frame, ptrToArrayInVector[offsett], offsett,output);
 				nextFreeFrame++;
-				 if (nextFreeFrame == 128) {
-					 if (checkIfFull == false) {
-						checkIfFull = true;
+				//if (nextFreeFrame == 128) {
+				//	 if (checkIfFull == false) {
+				//		checkIfFull = true;
 						
-					}
-					nextFreeFrame = 0;
-				}
+				//	}
+				//	nextFreeFrame = 0;
+				//}
 				
 
 			}
