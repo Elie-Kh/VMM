@@ -38,10 +38,13 @@ void updateTLB(int page, int frame, int indexx, vector<int>& pageTLB, vector<int
 
 }
 
-void print(int virtAddress, int frame, signed val, int offset) {
-	int physAddress = frame * 256 + offset;
+void print(int virtAddress, int frame, signed val, int offset, ofstream &output) {
+	int physAddress = frame * 128 + offset;
 	cout << "Virtual address: " << virtAddress << " Physical address: " << physAddress << " Value: " << val << endl;
+	output << "Virtual address: " << virtAddress << " Physical address: " << physAddress << " Value: " << val << endl;
 }
+
+
 
 void populateBin(int (&okay)[256], char* buf, int pageNum) {
 	for (int i = 0; i < 256; i++) {
@@ -54,6 +57,8 @@ int main() {
 	size_t result;
 	long fileSize;
 	ifstream addresses("addresses.txt");
+	ofstream output("outputPart2.txt");
+
 	string readz;
 	int  entries = 0;
 	signed value = 0;
@@ -64,13 +69,13 @@ int main() {
 	fill_n(pageTable, 256, -1);
 
 	int bin[256];
-	vector<int*>bins;
-	bins.reserve(256);
+	vector<int*>physicalMemory;
+	physicalMemory.reserve(128);
 	int physAddress;
 	int pageNum = 0;
 	int offsett = 0;
 	int frame = 0;
-	int* ptrToVector;
+	int* ptrToArrayInVector;
 	int tempo = 0;
 	backingStore = fopen("BACKING_STORE.bin", "rb");
 
@@ -98,10 +103,12 @@ int main() {
 
 	int i = 0;
 	int nextFreeFrame = 0;
+	int frameCounter = 0;
 	int index;
+	bool checkIfFull = false;
 	double pageFault = 0;
 	double tlbHit = 0;
-
+	//for (int j = )
 	while (i < 1000) {
 		pageNum = pageNumber(addressEntries[i]);
 		offsett = offset(addressEntries[i]);
@@ -110,50 +117,77 @@ int main() {
 			if (pageTable[pageNum] == -1) { //page Fault
 				pageFault++;
 				populateBin(bin, buffer, pageNum);
+				if (checkIfFull == false) {
+					physicalMemory.push_back(new int[256]);
+					
+				}
 				
-				bins.push_back(new int [256]);
-				ptrToVector = bins[nextFreeFrame];
+				ptrToArrayInVector = physicalMemory[nextFreeFrame];
 				for (int i = 0; i < 256; i++) {
-					ptrToVector[i] = bin[i];
+					ptrToArrayInVector[i] = bin[i];
 
 				}
+				
 				frame = nextFreeFrame;
+				
+				for (int j = 0; j < 256; j++) {
+					if (pageTable[j] == frame) {
+						pageTable[j] = -1;
+						break;
+					}
+				}
 				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 				pageTable[pageNum] = frame;
 				
-				ptrToVector = bins[frame];
-				print(addressEntries[i], frame, ptrToVector[offsett], offsett);
+				ptrToArrayInVector = physicalMemory[frame];
+				print(addressEntries[i], frame, ptrToArrayInVector[offsett], offsett,output);
 				nextFreeFrame++;
+				 if (nextFreeFrame == 128) {
+					 if (checkIfFull == false) {
+						checkIfFull = true;
+						
+					}
+					nextFreeFrame = 0;
+				}
+				
 
 			}
 			else {   //page found in Page Table
 				frame = pageTable[pageNum];
 				
-				ptrToVector = bins[frame];
-				value = ptrToVector[offsett];
+				ptrToArrayInVector = physicalMemory[frame];
+				value = ptrToArrayInVector[offsett];
 				
 				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
-				print(addressEntries[i], frame, value, offsett);
+				print(addressEntries[i], frame, value, offsett,output);
 
 			}
 		}
 		else {   //page found in TLB
 			frame = framesTLB[index];
-			ptrToVector = bins[frame];
+			ptrToArrayInVector = physicalMemory[frame];
 			
-			value = ptrToVector[offsett];
+			value = ptrToArrayInVector[offsett];
 			updateTLB(pageNum, frame, index, pagesTLB, framesTLB);
 			tlbHit++;
-			print(addressEntries[i], frame, value, offsett);
+			print(addressEntries[i], frame, value, offsett,output);
 		}
 
 
 		i++;
 	}
-
+	
+	if (output.is_open()) {
+		output << "Page fault rate: " << pageFault / 1000 * 100 << "%\n";
+		output << "TLB hit: " << tlbHit << "\n";
+		output << "TLB Hit-rate: " << tlbHit / 1000 * 100 << "%\n";
+		output.close();
+	}
 	cout << "Page fault rate: " << pageFault / 1000 * 100 << "%\n";
 	cout << "TLB hit: " << tlbHit << "\n";
 	cout << "TLB Hit-rate: " << tlbHit / 1000 * 100 << "%\n";
+	
+
 
 	system("pause");
 	return 0;
