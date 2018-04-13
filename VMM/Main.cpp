@@ -37,9 +37,10 @@ void updateTLB(int page, int frame, int indexx, vector<int>& pageTLB, vector<int
 
 }
 
-void print(int virtAddress, int frame, signed val, int offset){
+void print(int virtAddress, int frame, signed val, int offset, ofstream &output){
     int physAddress = frame*256 + offset; 
     cout << "Virtual address: "<<virtAddress << " Physical address: " << physAddress << " Value: "<< val <<endl;
+	output << "Virtual address: " << virtAddress << " Physical address: " << physAddress << " Value: " << val << endl;
 }
 
 int main() {
@@ -48,6 +49,7 @@ int main() {
     size_t result;
     long fileSize;
     ifstream addresses("addresses.txt");
+	ofstream output("address_output.txt");
     string readz;
     int  entries = 0;
     signed value = 0;
@@ -107,14 +109,14 @@ int main() {
 				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 				pageTable[pageNum] = frame;
 				
-				print(addressEntries[i], frame,bin[frame][offsett],offsett);
+				print(addressEntries[i], frame,bin[frame][offsett],offsett, output);
                 nextFreeFrame++;
 				
             } else {   //page found in Page Table
                 frame = pageTable[pageNum];
                 value = bin[frame][offsett];
                 updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
-				print(addressEntries[i], frame, bin[frame][offsett], offsett);
+				print(addressEntries[i], frame, bin[frame][offsett], offsett, output);
 
             }
         }
@@ -123,13 +125,19 @@ int main() {
             value = bin[frame][offsett];
             updateTLB(pageNum, frame,index,pagesTLB,framesTLB);
 			tlbHit++;
-			print(addressEntries[i], frame, bin[frame][offsett], offsett);
+			print(addressEntries[i], frame, bin[frame][offsett], offsett, output);
         }
 
 
         i++;
     }
-
+	if (output.is_open()) {
+		output << "Page faults: " << pageFault << "\n";
+		output << "Page fault rate: " << pageFault / 1000 * 100 << "%\n";
+		output << "TLB hit: " << tlbHit << "\n";
+		output << "TLB Hit-rate: " << tlbHit / 1000 * 100 << "%\n";
+		output.close();
+	}
 	cout << "Page fault rate: " << pageFault / 1000 * 100 << "%\n";
 	cout << "TLB hit: " << tlbHit << "\n";
 	cout << "TLB Hit-rate: " << tlbHit / 1000 * 100 << "%\n";
