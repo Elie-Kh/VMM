@@ -998,6 +998,7 @@ Virtual address: 8940 Physical address: 3052 Value: 0
 Virtual address: 9929 Physical address: 3145 Value: 0
 Virtual address: 45563 Physical address: 3323 Value: 126
 Virtual address: 12107 Physical address: 3275 Value: -46
+Page fault: 538
 Page fault rate: 53.8%
 TLB hit: 54
 TLB Hit-rate: 5.4%

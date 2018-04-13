@@ -178,11 +178,13 @@ int main() {
 	}
 	
 	if (output.is_open()) {
+		output << "Page fault: " << pageFault << "\n";
 		output << "Page fault rate: " << pageFault / 1000 * 100 << "%\n";
 		output << "TLB hit: " << tlbHit << "\n";
 		output << "TLB Hit-rate: " << tlbHit / 1000 * 100 << "%\n";
 		output.close();
 	}
+	cout << "Page fault: " << pageFault << "\n";
 	cout << "Page fault rate: " << pageFault / 1000 * 100 << "%\n";
 	cout << "TLB hit: " << tlbHit << "\n";
 	cout << "TLB Hit-rate: " << tlbHit / 1000 * 100 << "%\n";
