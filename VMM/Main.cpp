@@ -117,10 +117,10 @@ int main() {
 			if (pageTable[pageNum] == -1) { //page Fault
 				pageFault++;
 				populateBin(bin, buffer, pageNum);
-				if (checkIfFull == false) {
+				//if (checkIfFull == false) {
 					physicalMemory.push_back(new int[256]);
 					
-				}
+				//}
 				
 				ptrToArrayInVector = physicalMemory[nextFreeFrame];
 				for (int i = 0; i < 256; i++) {
@@ -130,12 +130,12 @@ int main() {
 				
 				frame = nextFreeFrame;
 				
-				for (int j = 0; j < 256; j++) {
-					if (pageTable[j] == frame) {
-						pageTable[j] = -1;
-						break;
-					}
-				}
+				//for (int j = 0; j < 256; j++) {
+				//	if (pageTable[j] == frame) {
+				//		pageTable[j] = -1;
+				//		break;
+				//	}
+				//}
 				updateTLB(pageNum, frame, 15, pagesTLB, framesTLB);
 				pageTable[pageNum] = frame;
 				
