@@ -1,4 +1,1 @@
-﻿  Main.cpp
-c:\users\elie\source\repos\vmm\vmm\main.cpp(74): warning C4101: 'physAddress': unreferenced local variable
-  LINK : C:\Users\Elie\source\repos\VMM\x64\Debug\VMM.exe not found or not built by the last incremental link; performing full link
-  VMM.vcxproj -> C:\Users\Elie\source\repos\VMM\x64\Debug\VMM.exe
+﻿  VMM.vcxproj -> C:\Users\e_khei\VMM\x64\Debug\VMM.exe
